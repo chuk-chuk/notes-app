@@ -1,0 +1,25 @@
+{
+  "name": "notes-app",
+  "version": "1.0.0",
+  "description": "small note app",
+  "main": "app.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chuk-chuk/notes-app.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chuk-chuk/notes-app/issues"
+  },
+  "homepage": "https://github.com/chuk-chuk/notes-app#readme",
+  "dependencies": {
+    "http-server": "^0.10.0"
+  }
+}
