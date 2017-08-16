@@ -1,13 +1,19 @@
 (function(exports) {
 
-
-function changeString(id, newValue) {
-  var elem = document.getElementById(id);
-  elem.innerHTML = newValue;
+function NoteController(NoteList){
+  NoteList.addNote('Something new');
+  this.listview = new ListView(NoteList);
+  console.log(this.listview);
 }
-exports.changeString = changeString;
+
+NoteController.prototype.changeString = function() {
+  document.getElementById('app').innerHTML = this.listview.show();
+};
+
+exports.NoteController = NoteController;
 })(this);
 
-window.onload = function() {
-  changeString('app', "HI");
-};
+// document.getElementById('app').innerHTML = 'Howdy';
+notelist = new NoteList(Note);
+notecontroller = new NoteController(notelist);
+notecontroller.changeString();
