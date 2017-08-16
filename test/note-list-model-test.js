@@ -4,7 +4,7 @@ function testGetList() {
 
 }
 function testAddNote() {
-  var noteList = new NoteList(Note);
+  var noteList = new NoteList();
   noteList.addNote("hello");
   assert.isTrue(noteList.getList().length === 1);
 }

@@ -13,7 +13,7 @@ NoteController.prototype.changeString = function() {
 exports.NoteController = NoteController;
 })(this);
 
-// document.getElementById('app').innerHTML = 'Howdy';
+
 notelist = new NoteList(Note);
 notecontroller = new NoteController(notelist);
 notecontroller.changeString();
