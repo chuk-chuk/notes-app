@@ -1,18 +1,29 @@
 describe("note controller", function(){
 
-  var elementMock = {};
-
+  var noteElementMock = {};
+  // var formElementMock = {};
   var noteModelMock = {
     id: 0
   };
 
-  var noteListMock = {
-    addNote: function(){},
-    getList: function(){
-      return [noteModelMock];
-    }
+  function FormElementMock(){ this.listenerCallCount = 0;}
+
+  FormElementMock.prototype.addEventListener = function(toListen, fn){
+    this.listenerCallCount++;
+    this.listeningFor = toListen;
   };
 
+  function NoteListMock(){
+    this.addNoteCallCount = 0;
+  }
+  NoteListMock.prototype.addNote = function(string){
+    this.argument = string;
+    this.addNoteCallCount++;
+  };
+
+  NoteListMock.prototype.getList = function(){
+    return [noteModelMock];
+  };
 
   function WindowMock(){ this.listenerCallCount = 0;}
 
@@ -28,8 +39,12 @@ describe("note controller", function(){
   var HTMLString = "<ul><li><div>Something new today</div></li></ul>";
   var singleHTMLString = "<div>Something new today</div>";
 
-  function NoteListViewMock(){}
+  function NoteListViewMock(){
+    this.getHTMLCallCount = 0;
+  }
+
   NoteListViewMock.prototype.getHTML = function(){
+    this.getHTMLCallCount++;
     return HTMLString;
   };
 
@@ -38,11 +53,18 @@ describe("note controller", function(){
     return singleHTMLString;
   };
   var windowMock = new WindowMock();
-  var noteController = new NoteController(windowMock, elementMock, noteListMock, NoteListViewMock, SingleNoteMock);
+  var formElementMock = new FormElementMock();
+  var noteListMock = new NoteListMock();
+  var noteController = new NoteController(windowMock, noteElementMock, formElementMock, noteListMock, NoteListViewMock, SingleNoteMock);
+
+
+  it("initialized with no notes", function(){
+    assert.isTrue(noteListMock.addNoteCallCount === 0 );
+  });
 
   it("updates inner HTML property of the element", function(){
     noteController.updateDisplay();
-    assert.isTrue(elementMock.innerHTML === HTMLString);
+    assert.isTrue(noteElementMock.innerHTML === HTMLString);
   });
 
   noteController.setupHashListener();
@@ -55,8 +77,34 @@ describe("note controller", function(){
     assert.isTrue(windowMock.listeningFor === "hashchange");
   });
 
+  noteController.setupFormListener();
+
+  it("add event listener to the form", function(){
+    assert.isTrue(formElementMock.listenerCallCount === 1);
+  });
+
+  it("sets up form to listen for submit", function(){
+    assert.isTrue(formElementMock.listeningFor === "submit");
+  });
+
   it("updates HTML property with a single note", function(){
     noteController.updateURL();
-    assert.isTrue(elementMock.innerHTML === singleHTMLString);
+    assert.isTrue(noteElementMock.innerHTML === singleHTMLString);
   });
+
+  noteController.noteListView.getHTMLCallCount = 0;
+  noteController.addNote("test");
+
+  it("ask notelist to create new note", function(){
+    assert.isTrue(noteListMock.addNoteCallCount === 1);
+  });
+
+  it("notelist receives form data input when submitted", function(){
+    assert.isTrue(noteListMock.argument === "test");
+  });
+
+  it("asks notelist view to update the display", function(){
+    assert.isTrue(noteController.noteListView.getHTMLCallCount === 1);
+  });
+
 });
