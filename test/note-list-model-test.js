@@ -1,13 +1,12 @@
-function testGetList() {
-  var noteList = new NoteList();
-  assert.isTrue(noteList.getList().length === 0);
+describe ("noteListModel", function(){
+  function noteModelMock(){}
+  var noteList = new NoteList(noteModelMock);
+  it("it begins with an empty notelist", function(){
+      assert.isTrue(noteList.getList().length === 0);
+  });
 
-}
-function testAddNote() {
-  var noteList = new NoteList();
-  noteList.addNote("hello");
-  assert.isTrue(noteList.getList().length === 1);
-}
-
-testGetList();
-testAddNote();
+  it("can store notes", function(){
+    noteList.addNote("hello");
+    assert.isTrue(noteList.getList().length === 1);
+  });
+});
