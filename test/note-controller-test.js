@@ -1,43 +1,12 @@
 describe("note controller", function(){
 
   var noteElementMock = {};
-  // var formElementMock = {};
-  var noteModelMock = {
-    id: 0
-  };
-
-  function FormElementMock(){ this.listenerCallCount = 0;}
-
-  FormElementMock.prototype.addEventListener = function(toListen, fn){
-    this.listenerCallCount++;
-    this.listeningFor = toListen;
-  };
-
-  function NoteListMock(){
-    this.addNoteCallCount = 0;
-  }
-  NoteListMock.prototype.addNote = function(string){
-    this.argument = string;
-    this.addNoteCallCount++;
-  };
-
-  NoteListMock.prototype.getList = function(){
-    return [noteModelMock];
-  };
-
-  function WindowMock(){ this.listenerCallCount = 0;}
-
-  WindowMock.prototype.addEventListener = function(toListen, fn){
-    this.listenerCallCount++;
-    this.listeningFor = toListen;
-  };
-
-  WindowMock.prototype.location = {
-    hash: "notes/0"
-  };
+  var noteModelMock = { id: 0 };
 
   var HTMLString = "<ul><li><div>Something new today</div></li></ul>";
   var singleHTMLString = "<div>Something new today</div>";
+
+  // note list view mock
 
   function NoteListViewMock(){
     this.getHTMLCallCount = 0;
@@ -48,22 +17,31 @@ describe("note controller", function(){
     return HTMLString;
   };
 
+  // single note view mock
+
   function SingleNoteMock(){}
   SingleNoteMock.prototype.returnHTML = function(){
     return singleHTMLString;
   };
+
+  // overwriting prototype method from mock objects file
+  // as noteModelMock only defined in this test file
+
+  NoteListMock.prototype.getList = function(){
+    return [noteModelMock];
+  };
+
   var windowMock = new WindowMock();
   var formElementMock = new FormElementMock();
   var noteListMock = new NoteListMock();
   var noteController = new NoteController(windowMock, noteElementMock, formElementMock, noteListMock, NoteListViewMock, SingleNoteMock);
-
 
   it("initialized with no notes", function(){
     assert.isTrue(noteListMock.addNoteCallCount === 0 );
   });
 
   it("updates inner HTML property of the element", function(){
-    noteController.updateDisplay();
+    noteController.displayAllNotes();
     assert.isTrue(noteElementMock.innerHTML === HTMLString);
   });
 
@@ -88,7 +66,7 @@ describe("note controller", function(){
   });
 
   it("updates HTML property with a single note", function(){
-    noteController.updateURL();
+    noteController.processHashChange();
     assert.isTrue(noteElementMock.innerHTML === singleHTMLString);
   });
 
